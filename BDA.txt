@@ -99,6 +99,29 @@ PRACTICAL - 5
 TIME SERIES ANALYSIS
 AIM:  SHOW THE IMPLEMENTATION OF TIME SERIES ANALYSIS.
 
+###########
+# Load necessary libraries
+library(forecast)
+
+# Create a synthetic time series
+a <- ts(1:30, frequency = 12, start = c(2011, 3))
+
+# Decompose the AirPassengers time series
+apts <- AirPassengers
+decomposed <- decompose(apts)
+plot(decomposed$figure, type = "b", xaxt = "n", xlab = "")
+monthNames <- months(seq(from = as.Date("2011-01-01"), by = "months", length.out = 12))
+axis(1, at = 1:12, labels = monthNames, las = 2)
+
+# Time Series Forecasting (ARIMA)
+fit <- arima(apts, order = c(1, 0, 0), seasonal = list(order = c(2, 1, 0), period = 12))
+forecast <- predict(fit, n.ahead = 24)
+U <- forecast$pred + 2 * forecast$se
+L <- forecast$pred - 2 * forecast$se
+ts.plot(apts, forecast$pred, U, L, col = c(1, 2, 4, 4), lty = c(1, 1, 2, 2))
+legend("topright", c("Actual", "Forecast", "Error Bounds (95% confidence)"), col = c(1, 2, 4), lty = c(1, 1, 2))
+############################################################################################################
+
 a <- ts(1:30, frequency = 12, start = c(2011,3))
 print(a)
 str(a)
@@ -107,7 +130,7 @@ plot(AirPassengers)
 f <- decompose (apts)
 f$figure
 plot(f$figure, type = "b", xaxt="n", xlab="")
-monthNames <- months (Isodate(2011,1:12,1))
+monthNames <- months (ISOdate(2011,1:12,1))
 axis (1,at=1:12, labels=monthNames, las=2)
 
 #####Time Series Forecasting
@@ -116,9 +139,11 @@ to predict the opening price of a stock based on its past performance. Two popul
 time series forecasting are autoregressive moving average (ARMA) and autoregressive integrated
 moving average (ARIMA)####
 
-fit <arima (AirPassengers, order=c(1,0,0), list (order=c(2,1,0), period=12))
+fit <- arima(AirPassengers, order=c(1,0,0), list(order=c(2,1,0), period=12))
 fore <- predict(fit, n. ahead=24)
-Ufore$pred 2*fore$se
-L <- fore$pred 2 fore$se
+fore <- predict(fit, n.ahead=24)
+U <- fore$pred + 2*fore$se
+L <- fore$pred - 2*fore$se
 ts.plot(AirPassengers, fore$pred, U, L, col=c(1,2,4,4), lty = c(1,1,2,2))
-legend("topleft", c("Actual", "Forecast", "Error Bounds (95% confidence)"),col=c(1,2,4), lty=c(1,1,2))
+legend("topright", c("Actual", "Forecast", "Error Bounds (95% confidence)"),col=c(1,2,4), lty = c(1,1,2))
+
