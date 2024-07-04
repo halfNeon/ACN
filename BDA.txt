@@ -1,0 +1,124 @@
+Practicl No 3 K-NEAREST NEIGHBOR
+AIM: SHOW THE IMPLEMENTATION OF K-NEAREST NEIGHBOR.
+
+
+install.packages("rJava")
+install.packages("RWeka")
+library(RWeka)
+system.file("arff", "iris.arff", package = "RWeka")
+iris <- read.arff(system.file("arff", "iris.arff", package = "RWeka"))
+str(iris)
+classifier <- IBk(class ~ ., data = iris)
+summary(classifier)
+classifier <- IBk(class ~., data = iris, control = Weka_control(K = 20, X = TRUE))
+evaluate_Weka_classifier(classifier, numFolds = 10)
+classifier
+================================================================================
+
+Practicl No 4 NAIVE BAYES ALGORITHM
+AIM: SHOW THE IMPLEMENTATION OF NAIVE BAYES.
+
+
+library(e1071) 
+pairs(iris[1:4], main = "Iris Data (red=setosa,green=versicolor,blue=virginica)",pch = 21, bg = c("red", "green", "blue")[unclass(iris$Species)])
+data(iris)
+summary(iris)
+classifier<-naiveBayes(iris[,1:4], iris[,5]) 
+table(predict(classifier, iris[,-5]), iris[,5])
+
+================================================================
+
+Practicl No 6 CLUSTERING ALGORITHM
+
+AIM: SHOW THE IMPLEMENTATION OF CLUSTERING ALGORITHM.
+
+
+iris2 <- iris
+iris2$Species <- NULL
+(kmeans.result <- kmeans(iris2, 3))
+table(iris$Species, kmeans.result$cluster )
+plot(iris2[c("Sepal.Length", "Sepal.Width")], col = kmeans.result$cluster)
+points(kmeans.result$centers[,c("Sepal.Length", "Sepal.Width")], col = 1:3, pch = 8, cex=2)
+###### Hierarchical ######
+idx <- sample(1:dim(iris)[1], 40)
+irisSample <- iris[idx,]
+irisSample$Species <- NULL
+hc <- hclust(dist(irisSample), method="ave")
+plot(hc, hang = -1, labels=iris$Species[idx]) 
+rect.hclust(hc, k=3)
+groups <- cutree(hc, k=3)
+
+========================================================================
+
+PRACTICAL - 2
+ASSOCIATION ALGORITHM
+AIM: SHOW THE IMPLEMENTATION OF ASSOCIATION ALGORITHM.
+
+
+str(Titanic) 
+
+ 
+df <- as.data.frame(Titanic) 
+head(df) 
+ 
+titanic.raw <- NULL 
+for(i in 1:4) { titanic.raw <- cbind(titanic.raw, rep(as.character(df[,i]), df$Freq))}
+titanic.raw <- as.data.frame(titanic.raw) 
+names(titanic.raw) <- names(df)[1:4]
+dim(titanic.raw) 
+str(titanic.raw)
+head(titanic.raw)
+summary(titanic.raw)
+
+============================================================================
+
+PRACTICAL - 1
+DECISION TREE ALGORITHM
+AIM: SHOW THE IMPLEMENTATION OF DECISION TREE.
+
+
+str(iris)
+set.seed(1234)
+ind <- sample(2, nrow(iris), replace=TRUE, prob=c(0.7, 0.3))
+trainData <- iris[ind == 1,]
+testData <- iris[ind == 2,]
+library(party) //for checking party package is installed or not
+install.packages("party") //for installing party package
+install.packages("partykit") //for installing partykit since ctree function is required further
+myFormula <- Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
+iris_ctree <- ctree(myFormula, data=trainData)
+table(predict(iris_ctree), trainData$Species)
+plot(iris_ctree) 
+plot(iris_ctree, type="simple")
+testPred <- predict(iris_ctree, newdata = testData)
+table(testPred, testData$Species) 
+
+===============================================================================
+
+PRACTICAL - 5
+TIME SERIES ANALYSIS
+AIM:  SHOW THE IMPLEMENTATION OF TIME SERIES ANALYSIS.
+
+a <- ts(1:30, frequency = 12, start = c(2011,3))
+print(a)
+str(a)
+attributes(a)
+plot(AirPassengers)
+f <- decompose (apts)
+f$figure
+plot(f$figure, type = "b", xaxt="n", xlab="")
+monthNames <- months (Isodate(2011,1:12,1))
+axis (1,at=1:12, labels=monthNames, las=2)
+
+#####Time Series Forecasting
+Time series forecasting is to forecast future events based on historical data. One example is
+to predict the opening price of a stock based on its past performance. Two popular models for
+time series forecasting are autoregressive moving average (ARMA) and autoregressive integrated
+moving average (ARIMA)####
+
+fit <arima (AirPassengers, order=c(1,0,0), list (order=c(2,1,0), period=12))
+fore <- predict(fit, n. ahead=24)
+Ufore$pred 2*fore$se
+L <- fore$pred 2 fore$se
+ts.plot(AirPassengers, fore$pred, U, L, col=c(1,2,4,4), lty = c(1,1,2,2))
+legend("topleft", c("Actual", "Forecast", "Error Bounds (95% confidence)"),col=c(1,2,4), lty=c(1,1,2))
